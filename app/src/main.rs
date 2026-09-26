@@ -7,7 +7,7 @@
 //!
 //! 数据契约与网页版完全一致：
 //!   - 鸭子外观：assets/duck_cad.bin（DUCKCAD3，gen_cad_table.mjs 生成）
-//!   - 策略：仓库 policies/*.onnx，obs[1,61] → actions[1,14]（duck-control/obs.rs 布局）
+//!   - 策略：项目自带 policies/*.onnx，obs[1,61] → actions[1,14]（duck-control/obs.rs 布局）
 //!   - 调度：robotd/src/control.rs 的移植（优先级链、技能窗口、缩放/增益、训练低通）
 //!
 //! 运行：cargo run --release（在 duck3d/app 下）。--selftest 无窗口跑仿真自检。
