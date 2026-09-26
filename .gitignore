@@ -1,0 +1,7 @@
+# 构建产物与自动下载的依赖
+app/target/
+app/mujoco-dist/
+
+# 截图/临时产物
+*.bmp
+.temp/

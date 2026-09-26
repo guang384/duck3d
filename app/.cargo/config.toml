@@ -1,0 +1,13 @@
+# crates.io 直连超时 —— 用 rsproxy（字节）镜像。仅作用于本 app。
+[source.crates-io]
+replace-with = 'rsproxy-sparse'
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[net]
+git-fetch-with-cli = true
+
+# mujoco-rs 的库位置：自动下载到 app/mujoco-dist（相对本文件）
+[env]
+MUJOCO_DOWNLOAD_DIR = { value = "mujoco-dist", relative = true }
