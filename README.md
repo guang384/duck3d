@@ -178,4 +178,18 @@ duck3d/                   独立项目（不依赖 microduck 仓库的其余部�
 CAD 更新流程：训练仓库的模型改动后，改 `gen_cad_table.mjs` 顶部的路径跑一遍，
 生成的 `duck_cad.bin` 直接落在 `assets/`。
 
+## 来源与许可
+
+**Apache-2.0**（见 `LICENSE`）。本项目的派生成分与来源：
+
+| 内容 | 来源 | 许可 |
+|---|---|---|
+| 观测布局（`obs[1,61]`）、控制调度、安全链 | `microduck` 的 `duck-control` · `robotd`（同仓库移植） | Apache-2.0 |
+| MuJoCo 模型、CAD 网格、默认策略 `policies/*.onnx` | `microduck_rl`（训练仓库）训练与导出 | Apache-2.0 |
+| MuJoCo 3.12 运行时 | DeepMind，构建期由 `mujoco-rs` 自动下载（不入库） | Apache-2.0 |
+| ONNX Runtime | Microsoft，构建期自动下载 | MIT |
+
+本仓库不包含机器人固件/daemon（`robotd`、`padd`、`duck-ipc-proto` 等）——那些在
+`microduck` 主仓库里；这里只保留桌面仿真控制台所需的最小集合。
+
 > AI生成
