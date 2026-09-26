@@ -17,6 +17,27 @@ AIGC:
 
 ![duck3d](https://img.shields.io/badge/policies-obs%5B1%2C61%5D%20%E2%86%92%20actions%5B1%2C14%5D-yellow)
 
+## 截图
+
+**物理模式（MuJoCo 真物理）** —— 训练同款模型、同款位置伺服：
+
+![主视图](docs/hero.png)
+
+**HUD 全貌** —— 左下指令输入面板（twist / head / body 三组中轴条）、右侧控制台
+（场景 / 策略槽 / 关节反馈 / IMU 气泡水平仪 / PD 调参 / 性能 / 键位）、右下技能键帽：
+
+![HUD](docs/hud.png)
+
+**指令面板细节** —— 每行一个中轴条：右正左负，拖数字 = 持久基值、按住键 = 弹簧偏移、
+行末「0」单独归零；BODY 行上的绿刻度是 ±15° 训练上限（键盘满偏到此为止）：
+
+![指令面板](docs/panel.png)
+
+**坡体场景** —— `scene_ramp.xml`（实体楔形，坡面与碰撞体严格重合）：
+
+![坡体场景](docs/ramp.png)
+
+
 ## 跑起来
 
 ```bash

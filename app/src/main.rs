@@ -2540,23 +2540,24 @@ fn offscreen_shot(root: &Path, out: &Path) -> Result<()> {
             )),
             ..Default::default()
         };
-        // egui 的 anchored Area 首帧是 sizing pass（invisible → 全部 Noop），
-        // 第二帧才真正渲染 —— 离屏跑两趟：第一趟学尺寸+产字体图集，
-        // 第二趟出真实画面。两趟的纹理 delta 都要喂给 renderer，缺一趟字就没了。
-        ctx.begin_pass(raw.clone());
-        let mut cmds = Vec::new();
-        build_hud(&ctx, &world, 1.0 / 60.0, 50.0, &mut cmds);
-        let full1 = ctx.end_pass();
-        for (id, delta) in &full1.textures_delta.set {
-            renderer.update_texture(&device, &queue, *id, delta);
+        // egui 的 anchored Area 首帧只是 sizing（invisible → 全 Noop），尺寸要下一趟才准；
+        // 而字体图集也在首趟才建出来，文字度量会变 —— 一趟不够。跑三趟：
+        // 两趟 sizing（第二趟把「有字体后的真实尺寸」记下来）+ 一趟真实渲染。
+        // 只跑两趟时，底部/右侧锚定的面板会按偏小的旧尺寸定位 —— 画布边缘把面板裁掉。
+        let mut last: Option<egui::FullOutput> = None;
+        for pass in 0..3 {
+            ctx.begin_pass(raw.clone());
+            let mut cmds = Vec::new();
+            build_hud(&ctx, &world, 1.0 / 60.0, 50.0, &mut cmds);
+            let full = ctx.end_pass();
+            for (id, delta) in &full.textures_delta.set {
+                renderer.update_texture(&device, &queue, *id, delta);
+            }
+            if pass == 2 {
+                last = Some(full);
+            }
         }
-        ctx.begin_pass(raw);
-        let mut cmds = Vec::new();
-        build_hud(&ctx, &world, 1.0 / 60.0, 50.0, &mut cmds);
-        let full = ctx.end_pass();
-        for (id, delta) in &full.textures_delta.set {
-            renderer.update_texture(&device, &queue, *id, delta);
-        }
+        let full = last.expect("offline HUD pass");
         let jobs = ctx.tessellate(full.shapes, 1.0);
         println!("[hud-shot] prims={}", jobs.len());
         hud_cmd_bufs = renderer.update_buffers(&device, &queue, &mut enc, &jobs, &screen);
