@@ -2073,9 +2073,11 @@ fn find_repo_root() -> Result<PathBuf> {
         }
     }
     if let Ok(exe) = std::env::current_exe() {
-        if let Some(d) = exe.parent() {
+        // 从 exe 往上找 4 层：app/target/release → … → 项目根（独立项目下至少 3 层）
+        let mut d: &Path = exe.parent().unwrap_or(&exe);
+        for _ in 0..4 {
             candidates.push(d.to_path_buf());
-            if let Some(p) = d.parent() { candidates.push(p.to_path_buf()); }
+            d = d.parent().unwrap_or(d);
         }
     }
     for c in candidates {
